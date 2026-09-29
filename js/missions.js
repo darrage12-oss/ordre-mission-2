@@ -74,11 +74,13 @@ const Missions = (() => {
       missions.push(data);
     }
     _save(missions);
+    if (typeof CloudSync !== 'undefined') CloudSync.onLocalChange();
     return data;
   }
 
   function remove(id) {
     _save(_load().filter(m => m.id !== id));
+    if (typeof CloudSync !== 'undefined') CloudSync.onLocalChange();
   }
 
   /* ---- Calculate mission days ---- */

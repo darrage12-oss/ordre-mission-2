@@ -53,12 +53,14 @@ const Users = (() => {
       users.push(data);
     }
     _save(users);
+    if (typeof CloudSync !== 'undefined') CloudSync.onLocalChange();
     return data;
   }
 
   function remove(id) {
     const users = _load().filter(u => u.id !== id);
     _save(users);
+    if (typeof CloudSync !== 'undefined') CloudSync.onLocalChange();
     // Clear active user if deleted
     if (getActiveUserId() === id) {
       localStorage.removeItem(ACTIVE_USER_KEY);
@@ -86,11 +88,12 @@ const Users = (() => {
     const users = getAll();
     const activeId = getActiveUserId();
 
-    selectEl.innerHTML = '<option value="">— Sélectionner —</option>';
+    selectEl.innerHTML = '<option value="">— Choisir par Matricule —</option>';
     users.forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.id;
-      opt.textContent = u.nom + (u.matricule ? ` (${u.matricule})` : '');
+      // Affichage du Matricule uniquement comme identifiant principal
+      opt.textContent = u.matricule || u.nom;
       if (u.id === activeId) opt.selected = true;
       selectEl.appendChild(opt);
     });
@@ -118,8 +121,8 @@ const Users = (() => {
       <div class="agent-card">
         <div class="agent-card-header">
           <div class="agent-avatar">${_initials(u.nom)}</div>
-          <div class="agent-name">${_esc(u.nom)}</div>
-          <div class="agent-matricule">Mat. ${_esc(u.matricule || '–')}</div>
+          <div class="agent-matricule" style="font-size:1.15rem;font-weight:700;color:var(--primary);letter-spacing:0.5px;margin-bottom:2px">Matricule : ${_esc(u.matricule || '–')}</div>
+          <div class="agent-name" style="font-size:0.92rem;color:var(--text-muted)">${_esc(u.nom)}</div>
         </div>
         <div class="agent-card-body">
           <div class="agent-info-row">

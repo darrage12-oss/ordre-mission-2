@@ -77,10 +77,15 @@
 
       <div class="topbar-right">
         <div class="agent-select-wrap">
-          <label for="active-agent-select"><i class="fa-solid fa-user-circle"></i> Agent actif :</label>
+          <label for="active-agent-select"><i class="fa-solid fa-id-card"></i> Matricule :</label>
           <select id="active-agent-select" class="topbar-agent-select">
-            <option value="">— Sélectionner —</option>
+            <option value="">— Choisir par Matricule —</option>
           </select>
+        </div>
+
+        <!-- Badge de synchronisation temps réel Mobile <-> PC -->
+        <div id="cloud-status-badge" class="cloud-badge status-syncing" title="Synchronisation temps réel Mobile ↔ PC (Cliquer pour actualiser)" onclick="if(typeof CloudSync !== 'undefined') CloudSync.syncNow()">
+          <i class="fa-solid fa-cloud"></i> <span>Synchronisation...</span>
         </div>
 
         <button id="dark-mode-toggle" title="Basculer mode sombre">
@@ -629,8 +634,9 @@
 <script src="js/dashboard.js"></script>
 <script src="js/pdf.js"></script>
 <script src="js/app.js"></script>
+<script src="js/cloud_sync.js"></script>
 
-<!-- Initialisation automatique de la date actuelle et des horaires par défaut -->
+<!-- Initialisation automatique de la date actuelle, horaires par défaut et CloudSync -->
 <script>
 (function() {
   function setDefaultDatesAndTimes() {
@@ -660,6 +666,9 @@
   // Au chargement initial
   document.addEventListener('DOMContentLoaded', () => {
     setDefaultDatesAndTimes();
+    if (typeof CloudSync !== 'undefined') {
+      CloudSync.init();
+    }
 
     // Synchronisation automatique : quand la Date de départ change,
     // "Fait le" s'aligne automatiquement dessus (tout en restant modifiable librement)

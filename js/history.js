@@ -46,12 +46,12 @@ const History = (() => {
     if (!sel) return;
 
     const current = sel.value;
-    sel.innerHTML = '<option value="">Tous les agents</option>';
+    sel.innerHTML = '<option value="">Tous les matricules</option>';
 
     Users.getAll().forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.id;
-      opt.textContent = u.nom;
+      opt.textContent = u.matricule || u.nom;
       if (u.id === current) opt.selected = true;
       sel.appendChild(opt);
     });
@@ -106,9 +106,14 @@ const History = (() => {
       <div class="mission-card">
         <div class="mission-card-header">
           <span class="mc-num">${_esc(m.numero || '–')}</span>
-          <span class="mc-agent">${_esc(agent.nom || '–')}</span>
+          <span class="mc-agent" style="font-weight:700;color:var(--primary)"><i class="fa-solid fa-id-card"></i> ${_esc(agent.matricule || agent.nom || '–')}</span>
         </div>
         <div class="mission-card-body">
+          <div class="mc-row">
+            <i class="fa-solid fa-user"></i>
+            <span class="mc-label">Agent :</span>
+            <span>${_esc(agent.nom || '–')}</span>
+          </div>
           <div class="mc-row">
             <i class="fa-solid fa-map-marker-alt"></i>
             <span class="mc-label">Lieu :</span>
